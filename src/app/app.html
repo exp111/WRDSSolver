@@ -3,21 +3,28 @@
   <label>Dictionary loaded</label>
 </div>
 
-<div>
-  <input type="text" [(ngModel)]="letter1">
-  <input type="text" [(ngModel)]="letter2">
-  <input type="text" [(ngModel)]="letter3">
-  <input type="text" [(ngModel)]="letter4">
-</div>
-<button (click)="generate()" [disabled]="!canGenerate()">Generate</button>
+
+<form>
+  <div>
+    <input type="text" [(ngModel)]="letter1" name="first">
+    <input type="text" [(ngModel)]="letter2" name="second">
+    <input type="text" [(ngModel)]="letter3" name="third">
+    <input type="text" [(ngModel)]="letter4" name="fourth">
+  </div>
+  <button type="submit"
+          (click)="generate()"
+          [disabled]="!canGenerate()">
+    Generate
+  </button>
+</form>
 
 <!-- TODO: make generate async, add spinning indicator -->
 
 <div>
   @for (entry of suggestedWords; track entry.word) {
     <div>
-      <span>{{entry.word}}</span>
-      <span>{{entry.points}}</span>
+      <span>{{ entry.word }}</span>
+      <span>{{ entry.points }}</span>
     </div>
   }
 </div>
