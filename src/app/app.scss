@@ -7,6 +7,8 @@
   align-items: center;
   // space between all items
   gap: 1rem;
+
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .dict-status {
@@ -26,15 +28,21 @@
 
   & .letters {
     display: flex;
+    // cventer horizontally
+    justify-content: center;
     // space between inputs
     gap: 1rem;
     // take up 20%
     height: 20vh;
-    //TODO: make text bigger
 
     & > input {
       // center text
       text-align: center;
+      // make inputs bigger
+      font-size: 2rem;
+      width: 15%;
+      // make text always uppercase
+      text-transform: uppercase;
     }
   }
 
@@ -53,8 +61,22 @@
   flex-direction: column;
   align-items: center;
 
-  & .result {
+  gap: 0.5rem;
 
+  & .result {
+    width: 75%;
+    display: flex;
+    gap: 1rem;
+    text-transform: uppercase;
+    justify-content: space-between;
+    font-size: large;
+
+    & .word {
+      font-weight: bold;
+    }
+
+    & .points {
+    }
   }
 
   & .placeholder {
