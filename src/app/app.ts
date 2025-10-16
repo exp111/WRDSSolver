@@ -1,8 +1,22 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 import {all_tokens, allowedLetters, Token} from '../tokens';
 import {checkWord} from '../gameUtil';
+
+export type GenerateMessage = {
+  tokens: Token[],
+  dictionary: Set<string>
+};
+
+export type GenerateMessageResult = {
+  words: Suggestion[]
+};
+
+export type Suggestion = {
+  word: string,
+  points: number
+};
 
 @Component({
   selector: 'app-root',
@@ -12,12 +26,16 @@ import {checkWord} from '../gameUtil';
 })
 export class App implements OnInit {
   httpClient = inject(HttpClient);
+  changeDetector = inject(ChangeDetectorRef);
 
   dictLoaded = false;
   dictionary!: Set<string>;
 
-  suggestedWords: {word: string, points: number}[] = [];
+  suggestedWords: Suggestion[] = [];
   enteredLetters: string = "";
+
+  generating = false;
+  worker: Worker | undefined;
 
   letterValidator = (c: AbstractControl) => {
     return !c.value || allowedLetters.includes(c.value?.toLowerCase()) ? null : {invalidLetter: c.value};
@@ -57,6 +75,7 @@ export class App implements OnInit {
 
   canGenerate() {
     return this.dictLoaded
+      && !this.generating
       && this.form.valid
       && this.form.value.letter1
       && this.form.value.letter2
@@ -64,24 +83,28 @@ export class App implements OnInit {
       && this.form.value.letter4;
   }
 
-  generate() {
+  async generate() {
     // get tokens from letters
     let tokens = this.generateTokens();
     if (!tokens) {
       return;
     }
-    // then try every word in dict
-    let words = Array.from(this.dictionary)
-      .map(w => ({word: w, points: checkWord(this.dictionary, tokens, w)}))
-      .filter(w => w.points > 0)
-      .sort((a, b) => b.points - a.points)
-      .slice(0, 10);
-    // sort output + trim
-    console.log(words);
-    this.suggestedWords = words;
-    this.enteredLetters = tokens.map(t => t.letter).join("");
-    // clear input
-    this.form.reset();
+
+    this.generating = true;
+    // create worker
+    this.worker = new Worker(new URL("generate.worker", import.meta.url));
+    // result handler
+    this.worker.onmessage = (ev: MessageEvent<GenerateMessageResult>) => {
+      this.generating = false;
+      // save results
+      console.log(ev.data.words);
+      this.suggestedWords = ev.data.words;
+      this.enteredLetters = tokens.map(t => t.letter).join("");
+      // clear input
+      this.form.reset();
+    }
+    // send job to worker
+    this.worker.postMessage({ dictionary: this.dictionary, tokens: tokens });
   }
 
   checkWord(word: string) {

@@ -15,7 +15,11 @@
           class="generate"
           (click)="generate()"
           [disabled]="!canGenerate()">
-    Generate
+    @if (generating) {
+      Generating...
+    } @else {
+      Generate
+    }
   </button>
 </form>
 <!-- TODO: focus first letter on generate -->
@@ -24,7 +28,7 @@
 <div class="results">
   <span class="title">Vorgeschlagene Wörter</span>
   @if (enteredLetters) {
-    <span class="letters">{{enteredLetters}}</span>
+    <span class="letters">{{ enteredLetters }}</span>
   }
   @for (entry of suggestedWords; track entry.word) {
     <div class="result">
