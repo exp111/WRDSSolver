@@ -16,10 +16,10 @@ export class App implements OnInit {
   dictLoaded = false;
   dictionary!: Set<string>;
 
-  letter1 = "";
-  letter2 = "";
-  letter3 = "";
-  letter4 = "";
+  letter1 = "r";
+  letter2 = "t";
+  letter3 = "m";
+  letter4 = "*";
 
   constructor() {
     (window as any).app = this;
@@ -57,7 +57,8 @@ export class App implements OnInit {
       return;
     }
     // then try every word in dict
-    let words = Object.values(this.dictionary).map(w => checkWord(this.dictionary, tokens, w))
+    let words = Array.from(this.dictionary)
+      .map(w => checkWord(this.dictionary, tokens, w))
       .filter(w => w !== false)
       .sort();
     // sort output + trim

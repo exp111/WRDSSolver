@@ -2,34 +2,33 @@ import {Token} from './tokens';
 
 export function checkWord(dictionary: Set<string>, tokens: Token[], word: string) {
   const tokensReversed = [...tokens].reverse();
-  const checkWordOneWayResultForward = checkWordOneWay(tokens, word);
-  let checkWordOneWayResultReversed = checkWordOneWay(tokensReversed, word);
-
+  const sanitized = word.toLowerCase().trim();
+  const forward = checkWordOneWay(tokens, sanitized);
+  const reversed = checkWordOneWay(tokensReversed, sanitized);
   // If both are false, return false
-  if (!checkWordOneWayResultForward.found && !checkWordOneWayResultReversed.found) return false;
-
-  word = word.toLowerCase();
-  word = word.trim();
-
-  // check word in dictionary
-  if (!dictionary.has(word)) {
+  if (!forward.found && !reversed.found) {
     return false;
   }
 
-  return Math.max(checkWordOneWayResultReversed.points, checkWordOneWayResultForward.points); // Return points used
+  // check word in dictionary
+  if (!dictionary.has(sanitized)) {
+    return false;
+  }
+
+  return Math.max(reversed.points, forward.points); // Return points used
 }
 
 function checkWordOneWay(tokens: Token[], word: string) {
-  word = word.toLowerCase();
-  word = word.trim();
-
-  if (word.length === 0) return {found: false, points: 0};
-
-  word = word.replace("ß", "ss"); // Replace sharp S with ss
+  let editedWord = word.toLowerCase().trim();
+  if (editedWord.length === 0) {
+    return {found: false, points: 0};
+  }
+  editedWord = editedWord.replace("ß", "ss"); // Replace sharp S with ss
 
   for (let i = tokens.length; i > 0; i--) {
     let points = 0;
 
+    // build regex for tokens
     let regex = "^";
     let numberOfCapturingGroups = 1;
     for (let j = 0; j < i; j++) {
@@ -50,9 +49,11 @@ function checkWordOneWay(tokens: Token[], word: string) {
     regex += "$";
 
     const pattern = new RegExp(regex);
-    const isMatch = pattern.test(word);
+    const isMatch = pattern.test(editedWord);
 
-    if (isMatch) return {found: true, points: points}; // Return points and the number of tokens used
+    if (isMatch) {
+      return {found: true, points: points};
+    }
   }
 
   return {found: false, points: 0}; // No match found
