@@ -10,3 +10,14 @@
   <input type="text" [(ngModel)]="letter4">
 </div>
 <button (click)="generate()" [disabled]="!canGenerate()">Generate</button>
+
+<!-- TODO: make generate async, add spinning indicator -->
+
+<div>
+  @for (entry of suggestedWords; track entry.word) {
+    <div>
+      <span>{{entry.word}}</span>
+      <span>{{entry.points}}</span>
+    </div>
+  }
+</div>

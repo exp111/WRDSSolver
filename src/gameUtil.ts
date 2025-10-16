@@ -7,12 +7,12 @@ export function checkWord(dictionary: Set<string>, tokens: Token[], word: string
   const reversed = checkWordOneWay(tokensReversed, sanitized);
   // If both are false, return false
   if (!forward.found && !reversed.found) {
-    return false;
+    return -1;
   }
 
   // check word in dictionary
   if (!dictionary.has(sanitized)) {
-    return false;
+    return -1;
   }
 
   return Math.max(reversed.points, forward.points); // Return points used

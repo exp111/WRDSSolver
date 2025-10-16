@@ -21,6 +21,8 @@ export class App implements OnInit {
   letter3 = "m";
   letter4 = "*";
 
+  suggestedWords: {word: string, points: number}[] = [];
+
   constructor() {
     (window as any).app = this;
   }
@@ -58,11 +60,13 @@ export class App implements OnInit {
     }
     // then try every word in dict
     let words = Array.from(this.dictionary)
-      .map(w => checkWord(this.dictionary, tokens, w))
-      .filter(w => w !== false)
-      .sort();
+      .map(w => ({word: w, points: checkWord(this.dictionary, tokens, w)}))
+      .filter(w => w.points > 0)
+      .sort((a, b) => b.points - a.points)
+      .slice(0, 10);
     // sort output + trim
     console.log(words);
+    this.suggestedWords = words;
   }
 
   checkWord(word: string) {
