@@ -69,6 +69,11 @@ export class App implements OnInit {
     console.log(words);
     this.suggestedWords = words;
     this.enteredLetters = tokens.map(t => t.letter).join("");
+    // clear input
+    this.letter1 = "";
+    this.letter2 = "";
+    this.letter3 = "";
+    this.letter4 = "";
   }
 
   checkWord(word: string) {
