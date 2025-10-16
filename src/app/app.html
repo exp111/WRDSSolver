@@ -23,7 +23,10 @@
 <!-- TODO: make generate async, add spinning indicator -->
 
 <div class="results">
-  <h1>Vorgeschlagene Wörter</h1>
+  <span class="title">Vorgeschlagene Wörter</span>
+  @if (enteredLetters) {
+    <span class="letters">{{enteredLetters}}</span>
+  }
   @for (entry of suggestedWords; track entry.word) {
     <div class="result">
       <span class="word">{{ entry.word }}</span>

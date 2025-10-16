@@ -22,6 +22,7 @@ export class App implements OnInit {
   letter4 = "";
 
   suggestedWords: {word: string, points: number}[] = [];
+  enteredLetters: string = "";
 
   constructor() {
     (window as any).app = this;
@@ -67,6 +68,7 @@ export class App implements OnInit {
     // sort output + trim
     console.log(words);
     this.suggestedWords = words;
+    this.enteredLetters = tokens.map(t => t.letter).join("");
   }
 
   checkWord(word: string) {
