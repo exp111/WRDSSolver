@@ -9,4 +9,4 @@
   <input type="text" [(ngModel)]="letter3">
   <input type="text" [(ngModel)]="letter4">
 </div>
-
+<button (click)="generate()" [disabled]="!canGenerate()">Generate</button>
