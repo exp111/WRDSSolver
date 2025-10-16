@@ -1,12 +1,12 @@
-<div>
+<div class="dict-status">
   <input disabled type="checkbox" [(ngModel)]="dictLoaded">
   <label>Dictionary loaded</label>
 </div>
 
-
-<form>
+<form class="input-form">
   <div class="letters">
     <!-- TODO: switch automatically to the next one -->
+    <!-- TODO: mark invalid letters red -->
     <input type="text" [(ngModel)]="letter1" name="first">
     <input type="text" [(ngModel)]="letter2" name="second">
     <input type="text" [(ngModel)]="letter3" name="third">
@@ -22,11 +22,14 @@
 <!-- TODO: clear letters on generate. show the entered letters near the results. focus first letter -->
 <!-- TODO: make generate async, add spinning indicator -->
 
-<div>
+<div class="results">
+  <h1>Vorgeschlagene Wörter</h1>
   @for (entry of suggestedWords; track entry.word) {
-    <div>
-      <span>{{ entry.word }}</span>
-      <span>{{ entry.points }}</span>
+    <div class="result">
+      <span class="word">{{ entry.word }}</span>
+      <span class="points">{{ entry.points }}</span>
     </div>
+  } @empty {
+    <span class="placeholder">Generiere um hier Wörter anzuzeigen</span>
   }
 </div>

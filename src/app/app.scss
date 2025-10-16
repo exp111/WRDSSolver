@@ -1,0 +1,63 @@
+// body
+:host {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  // center items horizontally
+  align-items: center;
+  // space between all items
+  gap: 1rem;
+}
+
+.dict-status {
+  display: flex;
+  & > input {
+    &:checked {
+      background-color: green;
+    }
+  }
+}
+
+//TODO: flex grow this to take all space?
+.input-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  & .letters {
+    display: flex;
+    // space between inputs
+    gap: 1rem;
+    // take up 20%
+    height: 20vh;
+    //TODO: make text bigger
+
+    & > input {
+      // center text
+      text-align: center;
+    }
+  }
+
+  & button.generate {
+    // center button
+    align-self: center;
+    width: 75%;
+    // make text bigger
+    padding: 0.5rem;
+    font-size: x-large;
+  }
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & .result {
+
+  }
+
+  & .placeholder {
+    color: dimgray;
+  }
+}
