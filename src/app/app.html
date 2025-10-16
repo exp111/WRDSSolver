@@ -16,14 +16,13 @@
           (click)="generate()"
           [disabled]="!canGenerate()">
     @if (generating) {
-      Generating...
+      <span class="generating">Generating...</span>
     } @else {
       Generate
     }
   </button>
 </form>
 <!-- TODO: focus first letter on generate -->
-<!-- TODO: make generate async, add spinning indicator -->
 
 <div class="results">
   <span class="title">Vorgeschlagene Wörter</span>

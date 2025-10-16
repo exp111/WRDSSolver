@@ -26,7 +26,6 @@ export type Suggestion = {
 })
 export class App implements OnInit {
   httpClient = inject(HttpClient);
-  changeDetector = inject(ChangeDetectorRef);
 
   dictLoaded = false;
   dictionary!: Set<string>;
