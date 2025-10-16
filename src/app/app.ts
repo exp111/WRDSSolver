@@ -8,7 +8,7 @@ import {checkWord} from '../gameUtil';
   selector: 'app-root',
   imports: [FormsModule],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.scss'
 })
 export class App implements OnInit {
   httpClient = inject(HttpClient);
@@ -16,10 +16,10 @@ export class App implements OnInit {
   dictLoaded = false;
   dictionary!: Set<string>;
 
-  letter1 = "r";
-  letter2 = "t";
-  letter3 = "m";
-  letter4 = "*";
+  letter1 = "";
+  letter2 = "";
+  letter3 = "";
+  letter4 = "";
 
   suggestedWords: {word: string, points: number}[] = [];
 
@@ -27,7 +27,7 @@ export class App implements OnInit {
     (window as any).app = this;
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadDictionary();
   }
 

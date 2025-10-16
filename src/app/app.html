@@ -5,7 +5,7 @@
 
 
 <form>
-  <div>
+  <div class="letters">
     <!-- TODO: switch automatically to the next one -->
     <input type="text" [(ngModel)]="letter1" name="first">
     <input type="text" [(ngModel)]="letter2" name="second">
@@ -13,6 +13,7 @@
     <input type="text" [(ngModel)]="letter4" name="fourth">
   </div>
   <button type="submit"
+          class="generate"
           (click)="generate()"
           [disabled]="!canGenerate()">
     Generate
