@@ -32,3 +32,5 @@ export const all_tokens: Token[] = [
 
   {"letter": "*", "value": 1, "number": 1, difficulty: 0}, // reduced to only 1 as its value is random from 1-5
 ];
+
+export const allowedLetters = all_tokens.map(t => t.letter);

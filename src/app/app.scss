@@ -43,6 +43,10 @@
       width: 15%;
       // make text always uppercase
       text-transform: uppercase;
+
+      &.ng-invalid {
+        border: 1px solid red;
+      }
     }
   }
 

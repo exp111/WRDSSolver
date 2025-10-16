@@ -1,12 +1,12 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
-import {all_tokens, Token} from '../tokens';
+import {all_tokens, allowedLetters, Token} from '../tokens';
 import {checkWord} from '../gameUtil';
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule, FormsModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -16,13 +16,19 @@ export class App implements OnInit {
   dictLoaded = false;
   dictionary!: Set<string>;
 
-  letter1 = "";
-  letter2 = "";
-  letter3 = "";
-  letter4 = "";
-
   suggestedWords: {word: string, points: number}[] = [];
   enteredLetters: string = "";
+
+  letterValidator = (c: AbstractControl) => {
+    return !c.value || allowedLetters.includes(c.value?.toLowerCase()) ? null : {invalidLetter: c.value};
+  }
+
+  form = new FormGroup({
+    letter1: new FormControl("", this.letterValidator),
+    letter2: new FormControl("", this.letterValidator),
+    letter3: new FormControl("", this.letterValidator),
+    letter4: new FormControl("", this.letterValidator),
+  });
 
   constructor() {
     (window as any).app = this;
@@ -50,7 +56,12 @@ export class App implements OnInit {
   }
 
   canGenerate() {
-    return this.dictLoaded && this.letter1 && this.letter2 && this.letter3 && this.letter4;
+    return this.dictLoaded
+      && this.form.valid
+      && this.form.value.letter1
+      && this.form.value.letter2
+      && this.form.value.letter3
+      && this.form.value.letter4;
   }
 
   generate() {
@@ -70,10 +81,7 @@ export class App implements OnInit {
     this.suggestedWords = words;
     this.enteredLetters = tokens.map(t => t.letter).join("");
     // clear input
-    this.letter1 = "";
-    this.letter2 = "";
-    this.letter3 = "";
-    this.letter4 = "";
+    this.form.reset();
   }
 
   checkWord(word: string) {
@@ -87,10 +95,10 @@ export class App implements OnInit {
   // get tokens from letters
   generateTokens() {
     let tokens = [
-      this.findToken(this.letter1),
-      this.findToken(this.letter2),
-      this.findToken(this.letter3),
-      this.findToken(this.letter4),
+      this.findToken(this.form.value.letter1),
+      this.findToken(this.form.value.letter2),
+      this.findToken(this.form.value.letter3),
+      this.findToken(this.form.value.letter4),
     ];
     if (tokens.includes(null)) {
       return null;
@@ -98,7 +106,10 @@ export class App implements OnInit {
     return tokens as Token[];
   }
 
-  findToken(letter: string) {
+  findToken(letter: string | null | undefined) {
+    if (!letter) {
+      return null;
+    }
     let lowercaseLetter = letter.toLowerCase();
     for (let token of all_tokens) {
       if (token.letter == lowercaseLetter) {
